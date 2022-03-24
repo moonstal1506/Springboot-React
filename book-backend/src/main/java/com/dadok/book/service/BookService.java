@@ -30,7 +30,7 @@ public class BookService {
 	}
 	
 	@Transactional(readOnly=true)
-	public List<Book> 모두가져오기(Long id) {
+	public List<Book> 모두가져오기() {
 		return bookRepository.findAll();
 	}
 
