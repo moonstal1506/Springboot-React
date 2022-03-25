@@ -14,7 +14,7 @@ function App() {
       <Header />
       <Container>
         <Route path="/" exact={true} component={Home} />
-        <Route path="/saveFrom" exact={true} component={SaveForm} />
+        <Route path="/saveForm" exact={true} component={SaveForm} />
         <Route path="/book/:id" exact={true} component={Detail} />
         <Route path="/loginForm" exact={true} component={LoginForm} />
         <Route path="/joinForm" exact={true} component={JoinForm} />
