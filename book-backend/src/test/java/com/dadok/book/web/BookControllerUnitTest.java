@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.Matches;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -27,10 +26,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import com.dadok.book.domain.Book;
 import com.dadok.book.service.BookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.extern.slf4j.Slf4j;
 //단위테스트
-@Slf4j
+//@Slf4j
 @WebMvcTest // controller, filter,controllerAdvice
 public class BookControllerUnitTest {
 

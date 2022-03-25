@@ -1,7 +1,6 @@
 package com.dadok.book.web;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -14,9 +13,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import org.aspectj.lang.annotation.Before;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +31,6 @@ import com.dadok.book.domain.Book;
 import com.dadok.book.domain.BookRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * 통합테스트:모든 bean들을 똑같이 ioc올리고 테스트 하는 것 느림
  * WebEnvironment.MOCK 실제 톰켓아니라 다른톰켓으로 테스트
@@ -44,11 +39,15 @@ import lombok.extern.slf4j.Slf4j;
  * @Transactional 각 테스트가 종료될 때마다 트랜잭션 롤백
  */
 
-@Slf4j
+
 @Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK) 
 public class BookControllerIntegereTest {
+	
+	
+//	private static final Logger log = LoggerFactory.getLogger(BookControllerIntegereTest.class);
+
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -69,6 +68,7 @@ public class BookControllerIntegereTest {
 //		bookRepository.saveAll(books);
 		
 		entityManager.createNativeQuery("ALTER TABLE book ALTER COLUMN id RESTART WITH 1").executeUpdate();
+//		entityManager.createNativeQuery("ALTER TABLE book AUTO_INCREMENT= 1").executeUpdate();
 	}
 	
 //	@AfterEach

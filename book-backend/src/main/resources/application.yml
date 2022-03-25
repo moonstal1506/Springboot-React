@@ -12,6 +12,8 @@ spring:
     username: sa
     password:   
     
+    
+    
   jpa:
     open-in-view: true
     hibernate:
