@@ -1,8 +1,11 @@
 package com.dadok.book.web;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -13,6 +16,7 @@ import javax.persistence.EntityManager;
 
 import org.aspectj.lang.annotation.Before;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +25,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,8 +61,20 @@ public class BookControllerIntegereTest {
 	
 	@BeforeEach
 	public void init() {
+		
+//		List<Book> books = new ArrayList<>();
+//		books.add(new Book(null, "제목1", "저자1"));
+//		books.add(new Book(null, "제목2", "저자2"));
+//		books.add(new Book(null, "제목3", "저자3"));
+//		bookRepository.saveAll(books);
+		
 		entityManager.createNativeQuery("ALTER TABLE book ALTER COLUMN id RESTART WITH 1").executeUpdate();
 	}
+	
+//	@AfterEach
+//	public void end() {
+//		bookRepository.deleteAll();
+//	}
 	
 	@Test
 	public void save_테스트() throws Exception {
@@ -106,6 +123,78 @@ public class BookControllerIntegereTest {
 		.andExpect(jsonPath("$", Matchers.hasSize(3)))
 		.andExpect(jsonPath("$.[2].title").value("제목3" ))
 		.andDo(MockMvcResultHandlers.print());
+	}
+	
+	@Test
+	public void findById_테스트() throws Exception{
+		//given
+		Long id=2L;
+		
+		List<Book> books = new ArrayList<>();
+		books.add(new Book(null, "제목1", "저자1"));
+		books.add(new Book(null, "제목2", "저자2"));
+		books.add(new Book(null, "제목3", "저자3"));
+		bookRepository.saveAll(books);
+		
+		//when
+		ResultActions resultAction = mockMvc.perform(get("/book/{id}",id)
+				.accept(MediaType.APPLICATION_JSON_UTF8));
+		
+		//then
+		resultAction
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.title").value("제목2" ))
+		.andDo(MockMvcResultHandlers.print());
+	}
+	
+	@Test
+	public void update_테스트() throws Exception{
+		//given
+		Long id=3L;
+		List<Book> books = new ArrayList<>();
+		books.add(new Book(null, "제목1", "저자1"));
+		books.add(new Book(null, "제목2", "저자2"));
+		books.add(new Book(null, "제목3", "저자3"));
+		bookRepository.saveAll(books);
+		
+		Book book = new Book(null, "제목", "저자");
+		String content = new ObjectMapper().writeValueAsString(book); // 오브젝트를 json으로 바꿔줌
+		
+		//when
+		ResultActions resultAction = mockMvc.perform(put("/book/{id}",id).contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(content).accept(MediaType.APPLICATION_JSON_UTF8));
+		
+		//then
+		resultAction
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.id").value(3L ))
+		.andExpect(jsonPath("$.title").value("제목" ))
+		.andDo(MockMvcResultHandlers.print());
+	}
+	
+	@Test
+	public void delete_테스트() throws Exception{
+		//given
+		Long id=1L;
+		List<Book> books = new ArrayList<>();
+		books.add(new Book(null, "제목1", "저자1"));
+		books.add(new Book(null, "제목2", "저자2"));
+		books.add(new Book(null, "제목3", "저자3"));
+		bookRepository.saveAll(books);
+
+		//when
+		ResultActions resultAction = mockMvc.perform(delete("/book/{id}",id)
+				.accept(MediaType.TEXT_PLAIN));
+		
+		//then
+		resultAction
+		.andExpect(status().isOk())
+		.andDo(MockMvcResultHandlers.print());
+		
+		MvcResult requestResult =resultAction.andReturn();
+		String result = requestResult.getResponse().getContentAsString();
+		
+		assertEquals("ok", result);
 	}
 
 }

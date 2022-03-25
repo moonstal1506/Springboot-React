@@ -1,5 +1,8 @@
 package com.dadok.book.domain;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
@@ -16,4 +19,16 @@ public class BookRepositoryUnitTest {
 	
 	@Autowired
 	private BookRepository bookRepository;
+	
+	@Test
+	public void save_테스트() {
+		//given
+		Book book = new Book(null,"책제목","책저자");
+		
+		//when
+		Book bookEntity = bookRepository.save(book);
+		
+		//then
+		assertEquals("책제목",bookEntity.getTitle());
+	}
 }
